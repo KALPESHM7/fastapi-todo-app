@@ -2,16 +2,33 @@
 # USER ROUTES
 # ==========================================
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from fastapi.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
 import models
+
+from database import get_db
 
 from auth import (
     get_current_user,
     get_current_user_from_cookie
 )
 
+
+# ==========================================
+# TEMPLATES
+# ==========================================
+
+templates = Jinja2Templates(
+    directory="templates"
+)
+
+
+# ==========================================
+# ROUTER
+# ==========================================
 
 router = APIRouter(
     tags=["User"]
@@ -79,13 +96,25 @@ def get_me(
 
 @router.get("/dashboard")
 def dashboard(
+    request: Request,
+    db: Session = Depends(get_db),
     current_user: models.User = Depends(
         get_current_user_from_cookie
     )
 ):
 
-    return {
-        "message": "Welcome to your dashboard",
-        "user_id": current_user.id,
-        "username": current_user.username
-    }
+    # Get only the tasks belonging to
+    # the currently logged-in user
+
+    tasks = db.query(models.Task).filter(
+        models.Task.owner_id == current_user.id
+    ).all()
+
+    return templates.TemplateResponse(
+        request,
+        "index.html",
+        {
+            "tasks": tasks,
+            "username": current_user.username
+        }
+    )

@@ -203,7 +203,7 @@ def login_web(
     )
 
     response = RedirectResponse(
-        url="/",
+        url="/dashboard",
         status_code=303
     )
 
