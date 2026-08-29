@@ -70,3 +70,7 @@ async def global_exception_handler(
             "detail": "Internal server error"
         }
     )
+
+@app.get("/healthz")
+def health_check():
+    return {"status": "healthy"}
