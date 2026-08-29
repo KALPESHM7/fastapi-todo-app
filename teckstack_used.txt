@@ -1,0 +1,19 @@
+                 FRONTEND
+        ┌─────────────────────┐
+        │ HTML                │
+        │ CSS                 │
+        │ JavaScript          │
+        └──────────┬──────────┘
+                   │
+                   │ HTTP / JSON
+                   ↓
+                 BACKEND
+        ┌─────────────────────┐
+        │ FastAPI             │
+        │ Authentication      │
+        │ Business Logic      │
+        │ SQLAlchemy          │
+        └──────────┬──────────┘
+                   │
+                   ↓
+                DATABASE

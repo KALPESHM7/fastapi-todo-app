@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>My To-Do List</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css?v=2"
+    >
+
+    <script
+        src="/static/script.js?v=2"
+        defer
+    ></script>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- ==========================================
+         HEADER
+         ========================================== -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>
+                My To-Do List
+            </h1>
+
+            <p class="welcome">
+
+                Welcome,
+                <strong>{{ username }}</strong>
+                👋
+
+            </p>
+
+        </div>
+
+
+        <a
+            href="/logout"
+            class="logout-button"
+        >
+            Logout
+        </a>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         ADD TASK
+         ========================================== -->
+
+    <form
+        method="post"
+        action="/tasks"
+        class="task-form"
+        id="taskForm"
+    >
+
+        <input
+            type="text"
+            name="title"
+            placeholder="Enter a task"
+            required
+        >
+
+
+        <button
+            type="submit"
+            class="add-button"
+        >
+            ADD TASK
+        </button>
+
+    </form>
+
+
+
+    <!-- ==========================================
+         TASK HEADER
+         ========================================== -->
+
+    <div class="tasks-header">
+
+        <h2>
+            My Tasks
+        </h2>
+
+
+        <span class="task-count">
+
+            {{ tasks|length }}
+            task(s)
+
+        </span>
+
+    </div>
+
+
+
+    <!-- ==========================================
+         TASK LIST
+         ========================================== -->
+
+    {% if tasks %}
+
+    <ul class="task-list">
+
+        {% for task in tasks %}
+
+        <li
+            class="task-item"
+            data-task-id="{{ task.id }}"
+        >
+
+
+            <!-- TASK TITLE -->
+
+            <div class="task-title">
+
+                {% if task.completed %}
+
+                <span class="completed-task">
+
+                    ✓ {{ task.title }}
+
+                </span>
+
+                {% else %}
+
+                {{ task.title }}
+
+                {% endif %}
+
+            </div>
+
+
+
+            <!-- TASK ACTIONS -->
+
+            <div class="task-actions">
+
+
+                <!-- EDIT -->
+
+                <button
+                    type="button"
+                    class="edit-button"
+                    data-task-id="{{ task.id }}"
+                    data-task-title="{{ task.title }}"
+                >
+                    EDIT
+                </button>
+
+
+
+                <!-- COMPLETE -->
+
+                {% if not task.completed %}
+
+                <form
+                    method="post"
+                    action="/tasks/{{ task.id }}/complete"
+                >
+
+                    <button
+                        type="submit"
+                        class="complete-button"
+                    >
+                        COMPLETE
+                    </button>
+
+                </form>
+
+                {% endif %}
+
+
+
+                <!-- DELETE -->
+
+                <form
+                    method="post"
+                    action="/tasks/{{ task.id }}/delete"
+                >
+
+                    <button
+                        type="submit"
+                        class="delete-button"
+                    >
+                        DELETE
+                    </button>
+
+                </form>
+
+            </div>
+
+
+        </li>
+
+        {% endfor %}
+
+    </ul>
+
+
+    {% else %}
+
+
+    <!-- ==========================================
+         EMPTY STATE
+         ========================================== -->
+
+    <div class="empty-state">
+
+        <h3>
+            No tasks yet 🎯
+        </h3>
+
+        <p>
+            Add your first task above to get started.
+        </p>
+
+    </div>
+
+
+    {% endif %}
+
+
+</div>
+
+
+</body>
+
+</html>
